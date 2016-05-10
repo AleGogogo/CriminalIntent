@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:text="@string/crime_details"
         style="?android:listSeparatorTextViewStyle"/>
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,6 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:text="@string/crime_solve"
+        android:text="@string/crime_sove"
         android:id="@+id/id_checkbox"/>
 </LinearLayout>

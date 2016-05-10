@@ -22,17 +22,24 @@
         android:layout_height="wrap_content"
         android:text="@string/crime_details"
         style="?android:listSeparatorTextViewStyle"/>
-
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+
         android:id="@+id/id_date_button"/>
     <CheckBox
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginLeft="16dp"
         android:text="@string/crime_solve"
         android:id="@+id/id_checkbox"/>
+    </LinearLayout>
 </LinearLayout>
