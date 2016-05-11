@@ -1,6 +1,5 @@
-package com.example.lyw.criminalintent;
+package com.example.lyw.criminalintent.Control;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +12,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+
+import com.example.lyw.criminalintent.R;
+import com.example.lyw.criminalintent.model.Crime;
 
 import java.text.DateFormat;
 

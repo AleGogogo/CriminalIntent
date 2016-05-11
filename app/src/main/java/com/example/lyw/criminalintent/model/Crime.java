@@ -1,4 +1,4 @@
-package com.example.lyw.criminalintent;
+package com.example.lyw.criminalintent.model;
 
 import java.util.Date;
 import java.util.UUID;
