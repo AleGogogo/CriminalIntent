@@ -9,10 +9,11 @@ import android.support.v4.app.FragmentManager;
 import com.example.lyw.criminalintent.R;
 
 /**
+ * ≥ÈœÛActivity
  * Created by LYW on 2016/5/10.
  */
 public abstract class SingleFragmentActivity extends FragmentActivity{
-    protected abstract Fragment creatFragment();
+    protected abstract Fragment createFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +21,7 @@ public abstract class SingleFragmentActivity extends FragmentActivity{
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
         if (fragment == null){
-            fragment = creatFragment();
+            fragment = createFragment();
             fm.beginTransaction().add(R.id.fragmentContainer,fragment)
                     .commit();
         }
