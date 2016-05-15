@@ -1,8 +1,11 @@
 package com.example.lyw.criminalintent.Control;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import com.example.lyw.criminalintent.model.Crime;
 import com.example.lyw.criminalintent.model.CrimeLab;
 
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -25,6 +29,8 @@ import java.util.UUID;
  */
 public class CrimeFragment extends Fragment {
     public static final String EXTRA_CRIME_ID = "com.example.lyw.criminalintent.crime_id";
+    private static final String DAILOG_DATE = "date";
+    private static final int REQUEST_DATE = 0;
     private Crime mCrime;
     private EditText mTitle;
     private Button mDateButton;
@@ -34,13 +40,13 @@ public class CrimeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        mCrime = new Crime();
-        //10-7 ´ÓargumentÀïÃæ»ñÈ¡Êı¾İ
+        //10-7 ï¿½ï¿½argumentï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
         UUID crimeId = (UUID) getArguments().getSerializable(EXTRA_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
-        //ÒÉÎÊ£¬ÉµÉµ·Ö²»Çå  10-5 Óë 10-7 µÄË³Ğò
+        //ï¿½ï¿½ï¿½Ê£ï¿½ÉµÉµï¿½Ö²ï¿½ï¿½ï¿½  10-5 ï¿½ï¿½ 10-7 ï¿½ï¿½Ë³ï¿½ï¿½
     }
 
-    //´úÂëÇåµ¥10-5  ÔÚfragment´´½¨ºó£¬Ìí¼Ó¸øactivityÇ°Íê³É
+    //ï¿½ï¿½ï¿½ï¿½ï¿½åµ¥10-5  ï¿½ï¿½fragmentï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½activityÇ°ï¿½ï¿½ï¿½
    public static CrimeFragment newInstance(UUID mUid){
        Bundle bundle = new Bundle();
        bundle.putSerializable(EXTRA_CRIME_ID,mUid);
@@ -64,7 +70,8 @@ public class CrimeFragment extends Fragment {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int i, int
+                    i1, int i2) {
                 mCrime.setmTitle(charSequence.toString());
             }
 
@@ -74,21 +81,52 @@ public class CrimeFragment extends Fragment {
             }
         });
         mDateButton = (Button) v.findViewById(R.id.id_date_button);
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                //ç”¨datepickerFragmentçš„newinstanceæ–¹æ³•æ¥æ›¿æ¢æ„é€ æ–¹æ³•ç”ŸæˆDatePickerFragment
+                //å°†crimeFragmentä¸­çš„æ•°æ®ä¼ ç»™datepickerFragment
+                DatePickerFragment dailog = DatePickerFragment
+                        .newInstance(mCrime.getmDate());
+                //å°†CrimeFragment.thisè®¾ç½®æˆ DatePickerFragmentçš„ç›®æ ‡Fragment
+                dailog.setTargetFragment(CrimeFragment.this,REQUEST_DATE);
+                dailog.show(fm,DAILOG_DATE);
+            }
+
+        });
         String time = DateFormat.getDateInstance(DateFormat.FULL).format(mCrime.getmDate());
         mDateButton.setText(time);
-        mDateButton.setEnabled(false);
+//        mDateButton.setEnabled(false);
 
 
         mSolvedCheckBox = (CheckBox) v.findViewById(R.id.id_checkbox);
-        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton
+                .OnCheckedChangeListener() {
 
 
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onCheckedChanged(CompoundButton compoundButton,
+                                         boolean b) {
                 mCrime.setmSoved(b);
             }
         });
         return v;
     }
 
+
+    //ä»datepickerFragmentçš„extraä¸­è·å–æ—¥æœŸï¼Œè®¾ç½®å¯¹åº”çš„crimeè®°å½•æ—¥æœŸï¼Œç„¶ååˆ·æ–°æŒ‰é’®çš„æ˜¾ç¤º
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      if (resultCode != Activity.RESULT_OK)return;
+        if (requestCode == REQUEST_DATE){
+            Date date = (Date)data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCrime.setmDate(date);
+            updateDate();
+        }
+
+    }
+   public void updateDate(){
+       mDateButton.setText(mCrime.getmDate().toString());
+   }
 }

@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentManager;
 import com.example.lyw.criminalintent.R;
 
 /**
- * ³éÏóActivity
+ * æŠ½è±¡ç±»Activity
  * Created by LYW on 2016/5/10.
  */
 public abstract class SingleFragmentActivity extends FragmentActivity{

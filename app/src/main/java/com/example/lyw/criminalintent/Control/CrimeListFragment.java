@@ -26,32 +26,33 @@ import java.util.List;
  */
 public class CrimeListFragment extends ListFragment {
     private ArrayList<Crime> mCrimes;
+    private static final int REQUEST_CRIME = 1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle(R.string.crimes_title);
-        //ÎªÊ²Ã´Õâ¸öget()·½·¨Àï´«ÈëµÄÊÇgetActivity£¬¶ø²»ÊÇgetcontext;
+        //ÎªÊ²Ã´ï¿½ï¿½ï¿½get()ï¿½ï¿½ï¿½ï¿½ï¿½ï´«ï¿½ï¿½ï¿½ï¿½ï¿½getActivityï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½getcontext;
         mCrimes = CrimeLab.get(getActivity()).getmCrimes();
         CrimeAdapter crimeAdapter =new CrimeAdapter(mCrimes);
         setListAdapter(crimeAdapter);
 
     }
 
-    //´úÂëÇåµ¥10-1 µ±ÓÃ»§µã»÷Ä³Ìõcrime£¬Æô¶¯CrimeActivity
+    //ä»£ç æ¸…å•10-1 ç‚¹å‡»æŸä¸ªcrimeå¯åŠ¨å¯¹åº”çš„CrimeActivity
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Crime c = ((CrimeAdapter)getListAdapter()).getItem(position);
        Log.d("TAG",c.getmTitle()+"was clicked");
 //
-        //´úÂëÇåµ¥11-  Æô¶¯crimePageActivity
+        //ä»£ç æ¸…å•åµ¥11-  crimePageActivity
         Intent i =new Intent(getActivity(),CrimePageActivity.class);
         i.putExtra(CrimeFragment.EXTRA_CRIME_ID,c.getmId());
-        startActivity(i);
+        startActivityForResult(i,REQUEST_CRIME);
 
     }
 
-    //´úÂëÇåµ¥ 9-14 ´´½¨CrimeAdapterÄÚ²¿Àà
+    //ï¿½ï¿½ï¿½ï¿½ï¿½åµ¥ 9-14 ï¿½ï¿½ï¿½ï¿½CrimeAdapterï¿½Ú²ï¿½ï¿½ï¿½
    private class CrimeAdapter extends ArrayAdapter<Crime>{
 
         public CrimeAdapter(ArrayList<Crime> crimes){
@@ -94,5 +95,13 @@ public class CrimeListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CRIME){
+
+        }
     }
 }
