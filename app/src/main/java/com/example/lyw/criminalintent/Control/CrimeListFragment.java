@@ -1,11 +1,16 @@
 package com.example.lyw.criminalintent.Control;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -27,6 +32,7 @@ import java.util.List;
 public class CrimeListFragment extends ListFragment {
     private ArrayList<Crime> mCrimes;
     private static final int REQUEST_CRIME = 1;
+    private boolean mSubtitleVisible;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +42,28 @@ public class CrimeListFragment extends ListFragment {
         CrimeAdapter crimeAdapter =new CrimeAdapter(mCrimes);
         setListAdapter(crimeAdapter);
 
+        //code list 16-4 inform FragmentManager its fragment should receive onCreateOptionMenu
+       setHasOptionsMenu(true);
+
+        //16-17 save CrimeListFragment instance
+        setRetainInstance(true);
+        mSubtitleVisible = false;
+
+    }
+
+    // <code> 16-19
+    //     according to the value of mSubtitleVisible to setting subtitle</code>
+    @TargetApi(11)
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        Log.d("TAG","excute ?");
+       if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
+            if (mSubtitleVisible){
+                getActivity().getActionBar().setSubtitle(R.string.subtitle);
+            }
+        }
+        return v;
     }
 
     //代码清单10-1 点击某个crime启动对应的CrimeActivity
@@ -104,4 +132,32 @@ public class CrimeListFragment extends ListFragment {
 
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_crime_list,menu);
+    }
+
+   //code list 16-7 coding method to request choosing menu task
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_item_new_crime:
+                Crime crime =new Crime();
+                CrimeLab.get(getActivity()).addCrime(crime);
+                Intent i = new Intent(getActivity(),CrimePageActivity.class);
+               //0 stand for requestCode
+                startActivityForResult(i,0);
+            case R.id.menu_item_show_subtitle:
+                // code list 16-16 achieve switch menu tile
+                 //incomplete
+                getActivity().getActionBar().setSubtitle(R.string.subtitle);
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
+        }
+
+
+
 }

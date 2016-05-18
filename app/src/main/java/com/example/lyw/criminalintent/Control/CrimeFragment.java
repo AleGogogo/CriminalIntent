@@ -2,13 +2,16 @@ package com.example.lyw.criminalintent.Control;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,6 +47,9 @@ public class CrimeFragment extends Fragment {
         UUID crimeId = (UUID) getArguments().getSerializable(EXTRA_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         //���ʣ�ɵɵ�ֲ���  10-5 �� 10-7 ��˳��
+
+        // //code list 16-9 inform FragmentManager its fragment should receive onCreateOptionMenu
+          setHasOptionsMenu(true);
     }
 
     //�����嵥10-5  ��fragment��������Ӹ�activityǰ���
@@ -59,6 +65,14 @@ public class CrimeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime,container,false);
+     //code list 16-8 invoking up navigation button
+       if (testVersion(Build.VERSION.SDK_INT,Build.VERSION_CODES.HONEYCOMB)){
+           getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+       }
+
+
+
+
 
         mTitle = (EditText) v.findViewById(R.id.id_title);
         mTitle.setText(mCrime.getmTitle());
@@ -111,8 +125,24 @@ public class CrimeFragment extends Fragment {
                 mCrime.setmSoved(b);
             }
         });
+
         return v;
     }
+
+
+    /**
+     * @param Version   Build.VERSION.SDK_INT stands for Android device version
+     * @param v Build.VERSION_CODES.HONEYCOMB stands for Andorid one of system version
+     * @return
+     */
+    private   Boolean testVersion(int Version,int v) {
+        if (Version >= v){
+            if (NavUtils.getParentActivityName(getActivity())!=null)
+           return true;
+        }
+        return false;
+    }
+
 
 
     //从datepickerFragment的extra中获取日期，设置对应的crime记录日期，然后刷新按钮的显示
@@ -129,4 +159,22 @@ public class CrimeFragment extends Fragment {
    public void updateDate(){
        mDateButton.setText(mCrime.getmDate().toString());
    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                //using the Class UavUtils to testing metadata
+                if (NavUtils.getParentActivityName(getActivity())!=null){
+                    NavUtils.navigateUpFromSameTask(getActivity());
+                }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CrimeLab.get(getActivity()).saveCrimes();
+    }
 }
